@@ -10,4 +10,7 @@ package com.smartcity.qiuchenly.Base;
  */
 
 public class ActivitySet {
+  public boolean TranslateBar=true;
+  public boolean doubleClickExitActivity=true;
+  public boolean noClickBack=false;
 }
