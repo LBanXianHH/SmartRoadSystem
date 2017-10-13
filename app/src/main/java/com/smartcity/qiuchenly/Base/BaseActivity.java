@@ -2,9 +2,13 @@ package com.smartcity.qiuchenly.Base;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -18,7 +22,10 @@ import android.widget.Toast;
  * Create: 2017 10 11 , on 11:06
  */
 
-public abstract class BaseActivity extends Activity implements View.OnClickListener {
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+
+  //define one Handler Object for using
+  Handler handler = null;
 
   //here set Content layout
   public abstract int getLayout();
@@ -33,11 +40,17 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayout());
+    handler = new Handler(getMainLooper());
     ActivitySet mSet = getLayoutSetting();
     if (mSet.TranslateBar) {
       ActionBar bar = getActionBar();
       if (bar != null) {
         bar.hide();
+      }
+
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
       }
     }
     doubleClickExit = mSet.doubleClickExitActivity;
@@ -46,7 +59,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     ready();
   }
 
-  protected abstract void ready();
+  public abstract void ready();
 
   //this is delays
   private long upTime = 0, now;
@@ -71,12 +84,11 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
   }
 
   /**
-   *
    * @param v
    */
-  abstract void click(View v);
+  public abstract void click(View v);
 
-  abstract void findID();
+  public abstract void findID();
 
   public <T extends View> T find(int id) {
     T t = super.findViewById(id);
@@ -102,5 +114,26 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
   <T> void Msg(T t, boolean isLong) {
     Toast.makeText(this, t.toString(), isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
+  }
+
+  public <T> void go(Class<T> activity, boolean isClosed) {
+    startActivity(new Intent(this, activity));
+    if (isClosed)
+      finish();
+  }
+
+  public <T> void go(Class<T> activity) {
+    startActivity(new Intent(this, activity));
+  }
+
+  public <T> void go(Class<T> activity, long delayMillis) {
+    final Intent mIntent = new Intent(this, activity);
+    handler.postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        startActivity(mIntent);
+      }
+    }, delayMillis);
+
   }
 }
