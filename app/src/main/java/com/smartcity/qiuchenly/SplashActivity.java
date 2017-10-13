@@ -1,11 +1,19 @@
 package com.smartcity.qiuchenly;
 
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
+import android.widget.TextView;
 
 import com.smartcity.qiuchenly.Base.ActivitySet;
 import com.smartcity.qiuchenly.Base.BaseActivity;
 
 public class SplashActivity extends BaseActivity {
+
+  TextView title;
 
   /**
    * 基本Activity布局设置
@@ -20,6 +28,7 @@ public class SplashActivity extends BaseActivity {
 
   /**
    * 基本activity设置封装
+   *
    * @return
    */
   @Override
@@ -36,7 +45,34 @@ public class SplashActivity extends BaseActivity {
    */
   @Override
   public void ready() {
-    go(MainActivity.class,2000);
+
+//    1 ScaleAnimation
+//    2 TranslateAnimation
+//    3 AlphaAnimation
+//    4 RotateAnimation
+    int height = getWindow().getWindowManager().getDefaultDisplay().getHeight();
+    Msg(height);
+    TranslateAnimation translate = new TranslateAnimation(0, 0,
+            height / 2, height / 2 - title.getHeight());
+    translate.setDuration(3000);
+    translate.setFillAfter(true);
+    translate.setAnimationListener(new Animation.AnimationListener() {
+      @Override
+      public void onAnimationStart(Animation animation) {
+
+      }
+
+      @Override
+      public void onAnimationEnd(Animation animation) {
+        go(MainActivity.class, 3000, true);
+      }
+
+      @Override
+      public void onAnimationRepeat(Animation animation) {
+
+      }
+    });
+    title.setAnimation(translate);
   }
 
   /**
@@ -54,5 +90,6 @@ public class SplashActivity extends BaseActivity {
    */
   @Override
   public void findID() {
+    title = find(R.id.Showing);
   }
 }

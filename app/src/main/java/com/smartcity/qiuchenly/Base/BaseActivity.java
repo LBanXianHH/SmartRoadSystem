@@ -48,6 +48,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         bar.hide();
       }
 
+
+      //FIX translateBarSetting
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
@@ -108,32 +110,44 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     click(view);
   }
 
-  <T> void Msg(T t) {
+  public <T> void Msg(T t) {
     Toast.makeText(this, t.toString(), Toast.LENGTH_SHORT).show();
   }
 
-  <T> void Msg(T t, boolean isLong) {
+  public <T> void Msg(T t, boolean isLong) {
     Toast.makeText(this, t.toString(), isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
   }
 
-  public <T> void go(Class<T> activity, boolean isClosed) {
+  public <T> void go(Class<T> activity, boolean isClosed, final boolean allowFinish) {
     startActivity(new Intent(this, activity));
     if (isClosed)
       finish();
+    goAnimation();
   }
 
-  public <T> void go(Class<T> activity) {
+  public <T> void go(Class<T> activity, final boolean allowFinish) {
     startActivity(new Intent(this, activity));
+    goAnimation();
+    if (allowFinish) {
+      finish();
+    }
   }
 
-  public <T> void go(Class<T> activity, long delayMillis) {
+  public <T> void go(Class<T> activity, long delayMillis, final boolean allowFinish) {
     final Intent mIntent = new Intent(this, activity);
     handler.postDelayed(new Runnable() {
       @Override
       public void run() {
         startActivity(mIntent);
+        goAnimation();
+        if (allowFinish) {
+          finish();
+        }
       }
     }, delayMillis);
+  }
 
+  void goAnimation() {
+    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
   }
 }
