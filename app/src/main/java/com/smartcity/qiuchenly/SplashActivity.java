@@ -1,19 +1,15 @@
 package com.smartcity.qiuchenly;
 
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.smartcity.qiuchenly.Base.ActivitySet;
 import com.smartcity.qiuchenly.Base.BaseActivity;
+import com.smartcity.qiuchenly.Base.ShareUtils;
 
 public class SplashActivity extends BaseActivity {
-
-  TextView title;
+  Button jmp = null;
 
   /**
    * 基本Activity布局设置
@@ -46,33 +42,17 @@ public class SplashActivity extends BaseActivity {
   @Override
   public void ready() {
 
-//    1 ScaleAnimation
-//    2 TranslateAnimation
-//    3 AlphaAnimation
-//    4 RotateAnimation
-    int height = getWindow().getWindowManager().getDefaultDisplay().getHeight();
-    Msg(height);
-    TranslateAnimation translate = new TranslateAnimation(0, 0,
-            height / 2, height / 2 - title.getHeight());
-    translate.setDuration(3000);
-    translate.setFillAfter(true);
-    translate.setAnimationListener(new Animation.AnimationListener() {
-      @Override
-      public void onAnimationStart(Animation animation) {
+//    1 ScaleAnimation 缩放
+//    2 TranslateAnimation 平移
+//    3 AlphaAnimation 渐变
+//    4 RotateAnimation 旋转
 
-      }
 
-      @Override
-      public void onAnimationEnd(Animation animation) {
-        go(MainActivity.class, 3000, true);
-      }
-
-      @Override
-      public void onAnimationRepeat(Animation animation) {
-
-      }
-    });
-    title.setAnimation(translate);
+    ShareUtils.getSharePreferences(this);
+    if (ShareUtils.getBoolean("isLogin"))
+      go(SecondActivity.class, 3000, true);
+    else
+      go(MainActivity.class, 3000, true);
   }
 
   /**
@@ -82,7 +62,13 @@ public class SplashActivity extends BaseActivity {
    */
   @Override
   public void click(View v) {
-
+    switch (v.getId()) {
+      case R.id.jmp:
+        go(MainActivity.class, true);
+        break;
+      default:
+        break;
+    }
   }
 
   /**
@@ -90,6 +76,6 @@ public class SplashActivity extends BaseActivity {
    */
   @Override
   public void findID() {
-    title = find(R.id.Showing);
+    jmp = find(R.id.jmp, true);
   }
 }

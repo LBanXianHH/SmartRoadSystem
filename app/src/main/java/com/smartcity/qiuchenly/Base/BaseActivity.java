@@ -52,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
       //FIX translateBarSetting
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
         getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
       }
     }
     doubleClickExit = mSet.doubleClickExitActivity;
@@ -72,6 +72,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     if (doubleClickExit) {
       if (keyCode == KeyEvent.KEYCODE_BACK) {
         if ((now = System.currentTimeMillis()) - upTime > 2000) {
+          Msg("press again");
           upTime = now;
         } else {
           System.exit(0);
@@ -135,6 +136,14 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
   public <T> void go(Class<T> activity, long delayMillis, final boolean allowFinish) {
     final Intent mIntent = new Intent(this, activity);
+
+
+//    handler.post(new Runnable() {
+//      @Override
+//      public void run() {
+//        finish();
+//      }
+//    });
     handler.postDelayed(new Runnable() {
       @Override
       public void run() {
