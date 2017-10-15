@@ -10,7 +10,10 @@ package com.smartcity.qiuchenly.Base;
  */
 
 public class ActivitySet {
-  public boolean TranslateBar=true;
-  public boolean doubleClickExitActivity=true;
-  public boolean noClickBack=false;
+    //状态栏透明
+    public boolean TranslateBar = true;
+    //双击退出整个APP
+    public boolean doubleClickExitActivity = true;
+    //点击返回键  无处理过程
+    public boolean noClickBack = false;
 }
